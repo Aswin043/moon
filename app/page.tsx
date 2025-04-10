@@ -162,7 +162,7 @@ export default function Home() {
         <div className="fixed top-20 left-4 max-w-sm bg-white dark:bg-gray-800 border-l-4 border-blue-500 p-4 rounded shadow-lg z-40 animate-slide-in">
           <div className="flex flex-col">
             <p className="font-medium text-gray-800 dark:text-white">
-              {greeting}! Welcome to Moon Strata Management
+              {greeting}! Welcome to Moon Management
             </p>
             <p className="text-sm mt-1 text-gray-600 dark:text-gray-300">
               Local time: {localTime}
