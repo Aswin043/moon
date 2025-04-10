@@ -24,3 +24,68 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+nav {
+  border-radius: 12px; /* Adds curved edges */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Adds a subtle shadow */
+  padding: 1rem; /* Adds padding inside the nav bar */
+  margin-left: 2%; /* Centers the nav bar with margins on both sides */
+  margin-right:-1%; /* Centers the nav bar with margins on both sides */
+  max-width: 95%; /* Limits the width of the nav bar */
+}
+
+div.nav-container {
+  max-width: 100%; /* Limits the width of the container */
+  margin: 0 auto; /* Centers the container horizontally */
+  padding: 0; /* Adds padding around the container */
+  
+}
+
+.hero-image {
+  width: 100%;
+  position: relative;
+  border-radius: 12px;
+  max-width: 200%;
+  overflow: hidden;
+  height: 793px;
+  object-fit: cover;
+}
+
+.hero-text {
+  position: absolute;
+  bottom: 10%; /* Moves the text lower on the image */
+  left: 50%; /* Centers the text horizontally */
+  transform: translateX(-50%); /* Adjusts for centering */
+  color: white; /* Makes the text white */
+  font-size: 10rem; /* Increases the text size */
+  font-weight: bold; /* Makes the text bold */
+  text-align: left; /* Centers the text alignment */
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7); /* Adds a shadow for better visibility */
+}
+div.rec-aboutus {
+  margin-top: 1rem; /* Adds space between the image and the rectangle */
+  background-color:rgb(30,41,57); /* Sets the background color */
+  color: rgb(255, 255, 255); /* Sets the text color */
+  padding: 2rem; /* Adds padding inside the rectangle */
+  border-radius: 16px; /* Makes the rectangle rounded */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Adds a subtle shadow */
+  width: 100%; /* Sets the width of the rectangle */
+  max-width: 1468px; /* Limits the maximum width */
+  margin-left: auto; /* Centers the rectangle horizontally */
+  margin-right: auto; /* Centers the rectangle horizontally */
+  text-align: left; /* Centers the text inside the rectangle */
+  margin-bottom: -2rem;
+}
+
+.boutus {
+  font-size: 2rem; /* Makes the text bigger */
+  font-weight: bold; /* Makes the text bold */
+  /*margin-bottom: -1rem; /* Adds space below the text */
+  text-align: center;
+}
+.aboutus-txt{
+  font-size: 1.5rem; /* Makes the text smaller */
+  line-height: 1.5; /* Increases line height for readability */
+  color: rgb(229, 231, 235); /* Sets the text color */
+  text-align: left; /* Centers the text */
+}
