@@ -86,7 +86,7 @@ export default function servicec() {
               </a>
             </li>
             <li>
-              <a href="/servicec" className="hover:text-gray-900 dark:hover:text-white">
+              <a href="/services" className="hover:text-gray-900 dark:hover:text-white">
                 Services
               </a>
             </li>

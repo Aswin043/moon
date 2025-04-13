@@ -168,12 +168,12 @@ export default function Community() {
               </a>
             </li>
             <li>
-              <a href="#about" className="hover:text-gray-900 dark:hover:text-white">
+              <a href="/services" className="hover:text-gray-900 dark:hover:text-white">
                 services
               </a>
             </li>
             <li>
-              <a href="#contact" className="hover:text-gray-900 dark:hover:text-white">
+              <a href="/rules" className="hover:text-gray-900 dark:hover:text-white">
                 rules
               </a>
             </li>
