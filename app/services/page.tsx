@@ -1,8 +1,10 @@
 "use client";
 
+import { supabase } from "@/lib/supabase";
 import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import { useAuth } from "../context/AuthContext";
 
 interface ServiceRequest {
   id: number;
@@ -16,6 +18,7 @@ interface ServiceRequest {
 }
 
 export default function servicec() {
+  const { user } = useAuth();
   // Form state
   const [formData, setFormData] = useState({
     name: "",
@@ -117,25 +120,48 @@ export default function servicec() {
           </div>
           <ul className="flex gap-6 text-sm font-medium text-gray-600 dark:text-gray-300">
             <li>
-              <a href="/" className="hover:text-gray-900 dark:hover:text-white">
+              <Link href="/" className="hover:text-gray-900 dark:hover:text-white">
                 Home
-              </a>
+              </Link>
             </li>
             <li>
-              <a href="/community" className="hover:text-gray-900 dark:hover:text-white">
-                Community
-              </a>
+              <Link href="/community" className="hover:text-gray-900 dark:hover:text-white">
+                community
+              </Link>
             </li>
             <li>
-              <a href="/services" className="hover:text-gray-900 dark:hover:text-white">
-                Services
-              </a>
+              <Link href="/services" className="hover:text-gray-900 dark:hover:text-white">
+                services
+              </Link>
             </li>
             <li>
-              <a href="/rules" className="hover:text-gray-900 dark:hover:text-white">
-                Rules
+              <Link href="/rules" className="hover:text-gray-900 dark:hover:text-white">
+                rules
+              </Link>
+            </li>
+            <li>
+              <a href="/api/owners.php" className="hover:text-gray-900 dark:hover:text-white">
+                owners
               </a>
             </li>
+            {!user ? (
+              <li>
+                <Link href="/login" className="hover:text-gray-900 dark:hover:text-white">
+                  login
+                </Link>
+              </li>
+            ) : (
+              <li>
+                <button
+                  onClick={async () => {
+                    await supabase.auth.signOut();
+                  }}
+                  className="hover:text-gray-900 dark:hover:text-white"
+                >
+                  logout
+                </button>
+              </li>
+            )}
           </ul>
         </nav>
       </div>

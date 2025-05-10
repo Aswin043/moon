@@ -6,7 +6,8 @@ import type { NextPage } from 'next';
 import Head from 'next/head';
 import { useState } from 'react';
 import { format } from 'date-fns';
-
+import { supabase } from "@/lib/supabase";
+import { useAuth } from "../context/AuthContext"; 
 // Define the notice type
 interface Notice {
   id: string;
@@ -148,6 +149,7 @@ function NoticeBoard() {
 }
 
 export default function Community() {
+  const { user } = useAuth();
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       {/* Navigation Bar */}
@@ -158,25 +160,48 @@ export default function Community() {
           </div>
           <ul className="flex gap-6 text-sm font-medium text-gray-600 dark:text-gray-300">
             <li>
-              <a href="/" className="hover:text-gray-900 dark:hover:text-white">
+              <Link href="/" className="hover:text-gray-900 dark:hover:text-white">
                 Home
-              </a>
+              </Link>
             </li>
             <li>
-              <a href="/community" className="hover:text-gray-900 dark:hover:text-white">
+              <Link href="/community" className="hover:text-gray-900 dark:hover:text-white">
                 community
-              </a>
+              </Link>
             </li>
             <li>
-              <a href="/services" className="hover:text-gray-900 dark:hover:text-white">
+              <Link href="/services" className="hover:text-gray-900 dark:hover:text-white">
                 services
-              </a>
+              </Link>
             </li>
             <li>
-              <a href="/rules" className="hover:text-gray-900 dark:hover:text-white">
+              <Link href="/rules" className="hover:text-gray-900 dark:hover:text-white">
                 rules
+              </Link>
+            </li>
+            <li>
+              <a href="/api/owners.php" className="hover:text-gray-900 dark:hover:text-white">
+                owners
               </a>
             </li>
+            {!user ? (
+              <li>
+                <Link href="/login" className="hover:text-gray-900 dark:hover:text-white">
+                  login
+                </Link>
+              </li>
+            ) : (
+              <li>
+                <button
+                  onClick={async () => {
+                    await supabase.auth.signOut();
+                  }}
+                  className="hover:text-gray-900 dark:hover:text-white"
+                >
+                  logout
+                </button>
+              </li>
+            )}
           </ul>
         </nav>
       </div>
