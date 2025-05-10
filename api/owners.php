@@ -1,38 +1,31 @@
 <?php
-
-// Sample data (use this if database is not set up yet)
+// Static owner data
 $owners = [
     [
-        'id' => 1,
         'name' => 'John Smith',
         'position' => 'Building Manager',
         'email' => 'john.smith@moonstrata.com.au',
         'phone' => '+61 2 0000 0001',
-        'image' => 'images/owners/john-smith.jpg',
+        'image' => '/images/owners/john-smith.jpg',
         'bio' => 'With over 15 years of experience in property management, John ensures smooth operations and resident satisfaction.'
     ],
     [
-        'id' => 2,
         'name' => 'Sarah Johnson',
         'position' => 'Assistant Manager',
         'email' => 'sarah.johnson@moonstrata.com.au',
         'phone' => '+61 2 0000 0002',
-        'image' => 'images/owners/sarah-johnson.jpg',
+        'image' => '/images/owners/sarah-johnson.jpg',
         'bio' => 'Sarah specializes in community relations and maintenance coordination, bringing 10 years of strata management expertise.'
     ],
     [
-        'id' => 3,
         'name' => 'Michael Chen',
         'position' => 'Maintenance Supervisor',
         'email' => 'michael.chen@moonstrata.com.au',
         'phone' => '+61 2 0000 0003',
-        'image' => 'images/owners/michael-chen.jpg',
+        'image' => '/images/owners/michael-chen.jpg',
         'bio' => 'Michael oversees all maintenance operations with a focus on preventive maintenance and quick response times.'
     ]
 ];
-
-// Use database results if available, otherwise use sample data
-
 ?>
 
 <!DOCTYPE html>
@@ -49,6 +42,13 @@ $owners = [
         .owner-card:hover {
             transform: translateY(-5px);
         }
+        .profile-image {
+            width: 200px;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 50%;
+            margin: 0 auto;
+        }
     </style>
 </head>
 <body class="bg-gray-50">
@@ -60,11 +60,11 @@ $owners = [
                     <span class="text-xl font-semibold text-gray-800">.moon</span>
                 </div>
                 <div class="flex items-center space-x-8">
-                    <a href="index.php" class="text-gray-600 hover:text-gray-900">Home</a>
-                    <a href="community.php" class="text-gray-600 hover:text-gray-900">Community</a>
-                    <a href="services.php" class="text-gray-600 hover:text-gray-900">Services</a>
-                    <a href="rules.php" class="text-gray-600 hover:text-gray-900">Rules</a>
-                    <a href="owners.php" class="text-gray-600 hover:text-gray-900 font-medium">Owners</a>
+                    <a href="/" class="text-gray-600 hover:text-gray-900">Home</a>
+                    <a href="/community" class="text-gray-600 hover:text-gray-900">Community</a>
+                    <a href="/services" class="text-gray-600 hover:text-gray-900">Services</a>
+                    <a href="/rules" class="text-gray-600 hover:text-gray-900">Rules</a>
+                    <a href="/owners.php" class="text-gray-600 hover:text-gray-900 font-medium">Owners</a>
                 </div>
             </div>
         </div>
@@ -75,29 +75,27 @@ $owners = [
         <h1 class="text-3xl font-bold text-gray-800 mb-8 text-center">Building Owners</h1>
         
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <?php foreach ($displayOwners as $owner): ?>
-                <div class="bg-white rounded-lg shadow-md overflow-hidden owner-card">
-                    <div class="h-64 relative">
+            <?php foreach ($owners as $owner): ?>
+                <div class="bg-white rounded-lg shadow-md overflow-hidden owner-card p-6">
+                    <div class="flex flex-col items-center">
                         <img 
                             src="<?php echo htmlspecialchars($owner['image']); ?>" 
                             alt="<?php echo htmlspecialchars($owner['name']); ?>"
-                            class="w-full h-full object-cover"
+                            class="profile-image mb-4"
                         >
-                    </div>
-                    <div class="p-6">
                         <h2 class="text-xl font-semibold text-gray-800 mb-2">
                             <?php echo htmlspecialchars($owner['name']); ?>
                         </h2>
                         <p class="text-blue-600 font-medium mb-4">
                             <?php echo htmlspecialchars($owner['position']); ?>
                         </p>
-                        <p class="text-gray-600 mb-4">
+                        <p class="text-gray-600 mb-4 text-center">
                             <?php echo htmlspecialchars($owner['bio']); ?>
                         </p>
-                        <div class="space-y-2">
+                        <div class="space-y-2 w-full">
                             <a 
                                 href="mailto:<?php echo htmlspecialchars($owner['email']); ?>"
-                                class="flex items-center text-gray-600 hover:text-blue-600"
+                                class="flex items-center justify-center text-gray-600 hover:text-blue-600"
                             >
                                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
@@ -106,7 +104,7 @@ $owners = [
                             </a>
                             <a 
                                 href="tel:<?php echo htmlspecialchars($owner['phone']); ?>"
-                                class="flex items-center text-gray-600 hover:text-blue-600"
+                                class="flex items-center justify-center text-gray-600 hover:text-blue-600"
                             >
                                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
@@ -129,11 +127,4 @@ $owners = [
         </div>
     </footer>
 </body>
-</html>
-
-<?php
-// Close database connection if it was opened
-if (isset($conn)) {
-    $conn->close();
-}
-?> 
+</html> 
