@@ -153,19 +153,35 @@ function NoticeBoard() {
 function Members() {
   const [members, setMembers] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     async function fetchMembers() {
       try {
+        console.log('Fetching members from profiles table...');
+        
         const { data, error } = await supabase
-          .from('profiles')
+          .from('profile')
           .select('*')
           .order('created_at', { ascending: false });
 
-        if (error) throw error;
-        setMembers(data || []);
-      } catch (error) {
+        console.log('Supabase response:', { data, error });
+
+        if (error) {
+          console.error('Supabase error:', error);
+          throw error;
+        }
+
+        if (!data || data.length === 0) {
+          console.log('No members found in profiles table');
+          setError('No members found');
+        } else {
+          console.log('Members found:', data);
+          setMembers(data);
+        }
+      } catch (error: any) {
         console.error('Error fetching members:', error);
+        setError(error.message || 'Failed to fetch members');
       } finally {
         setLoading(false);
       }
@@ -193,6 +209,17 @@ function Members() {
     );
   }
 
+  if (error) {
+    return (
+      <div className="bg-white rounded-lg shadow-lg p-6 max-w-4xl mx-auto w-full">
+        <h2 className="text-2xl font-bold text-gray-800 mb-6">Community Members</h2>
+        <div className="text-red-500 p-4 bg-red-50 rounded-lg">
+          {error}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="bg-white rounded-lg shadow-lg p-6 max-w-4xl mx-auto w-full">
       <h2 className="text-2xl font-bold text-gray-800 mb-6">Community Members</h2>
@@ -201,7 +228,7 @@ function Members() {
           <div key={member.id} className="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg">
             <div className="h-12 w-12 bg-blue-100 rounded-full flex items-center justify-center">
               <span className="text-blue-600 font-semibold text-lg">
-                {member.first_name?.[0] || member.email?.[0] || '?'}
+                {member.first_name?.[0]?.toUpperCase() || member.email?.[0]?.toUpperCase() || '?'}
               </span>
             </div>
             <div>
