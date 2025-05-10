@@ -1,21 +1,4 @@
 <?php
-// Database connection (replace with your actual database credentials)
-$db_host = 'localhost';
-$db_user = 'your_username';
-$db_pass = 'your_password';
-$db_name = 'strata_db';
-
-// Create connection
-$conn = new mysqli($db_host, $db_user, $db_pass, $db_name);
-
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-
-// Fetch owners from database
-$sql = "SELECT * FROM owners";
-$result = $conn->query($sql);
 
 // Sample data (use this if database is not set up yet)
 $owners = [
@@ -77,11 +60,11 @@ $displayOwners = $result && $result->num_rows > 0 ? $result->fetch_all(MYSQLI_AS
                     <span class="text-xl font-semibold text-gray-800">.moon</span>
                 </div>
                 <div class="flex items-center space-x-8">
-                    <a href="/" class="text-gray-600 hover:text-gray-900">Home</a>
-                    <a href="/community" class="text-gray-600 hover:text-gray-900">Community</a>
-                    <a href="/services" class="text-gray-600 hover:text-gray-900">Services</a>
-                    <a href="/rules" class="text-gray-600 hover:text-gray-900">Rules</a>
-                    <a href="/owners.php" class="text-gray-600 hover:text-gray-900 font-medium">Owners</a>
+                    <a href="index.php" class="text-gray-600 hover:text-gray-900">Home</a>
+                    <a href="community.php" class="text-gray-600 hover:text-gray-900">Community</a>
+                    <a href="services.php" class="text-gray-600 hover:text-gray-900">Services</a>
+                    <a href="rules.php" class="text-gray-600 hover:text-gray-900">Rules</a>
+                    <a href="owners.php" class="text-gray-600 hover:text-gray-900 font-medium">Owners</a>
                 </div>
             </div>
         </div>
@@ -149,8 +132,5 @@ $displayOwners = $result && $result->num_rows > 0 ? $result->fetch_all(MYSQLI_AS
 </html>
 
 <?php
-// Close database connection if it was opened
-if (isset($conn)) {
-    $conn->close();
-}
+
 ?> 
