@@ -77,11 +77,11 @@ $displayOwners = $result && $result->num_rows > 0 ? $result->fetch_all(MYSQLI_AS
                     <span class="text-xl font-semibold text-gray-800">.moon</span>
                 </div>
                 <div class="flex items-center space-x-8">
-                    <a href="index.php" class="text-gray-600 hover:text-gray-900">Home</a>
-                    <a href="community.php" class="text-gray-600 hover:text-gray-900">Community</a>
-                    <a href="services.php" class="text-gray-600 hover:text-gray-900">Services</a>
-                    <a href="rules.php" class="text-gray-600 hover:text-gray-900">Rules</a>
-                    <a href="owners.php" class="text-gray-600 hover:text-gray-900 font-medium">Owners</a>
+                    <a href="/" class="text-gray-600 hover:text-gray-900">Home</a>
+                    <a href="/community" class="text-gray-600 hover:text-gray-900">Community</a>
+                    <a href="/services" class="text-gray-600 hover:text-gray-900">Services</a>
+                    <a href="/rules" class="text-gray-600 hover:text-gray-900">Rules</a>
+                    <a href="/owners.php" class="text-gray-600 hover:text-gray-900 font-medium">Owners</a>
                 </div>
             </div>
         </div>
