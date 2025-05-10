@@ -1,7 +1,10 @@
+"use client";
+
 import { supabase } from "@/lib/supabase";
 import Image from "next/image";
 import Link from "next/link";
 import { useAuth } from "../context/AuthContext";
+
 
   export default function Rules() {
   const { user } = useAuth();
