@@ -18,7 +18,7 @@ interface ServiceRequest {
 }
 
 export default function servicec() {
-  const { user } = useAuth();
+  const { user, userName } = useAuth();
   // Form state
   const [formData, setFormData] = useState({
     name: "",
@@ -151,16 +151,21 @@ export default function servicec() {
                 </Link>
               </li>
             ) : (
-              <li>
-                <button
-                  onClick={async () => {
-                    await supabase.auth.signOut();
-                  }}
-                  className="hover:text-gray-900 dark:hover:text-white"
-                >
-                  logout
-                </button>
-              </li>
+              <>
+                <li className="font-semibold text-blue-700 dark:text-blue-300">
+                  Welcome, {userName || 'User'}!
+                </li>
+                <li>
+                  <button
+                    onClick={async () => {
+                      await supabase.auth.signOut();
+                    }}
+                    className="hover:text-gray-900 dark:hover:text-white"
+                  >
+                    logout
+                  </button>
+                </li>
+              </>
             )}
           </ul>
         </nav>

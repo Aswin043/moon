@@ -243,7 +243,7 @@ function Members() {
 }
 
 export default function Community() {
-  const { user } = useAuth();
+  const { user, userName } = useAuth();
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       {/* Navigation Bar */}
@@ -285,16 +285,21 @@ export default function Community() {
                 </Link>
               </li>
             ) : (
-              <li>
-                <button
-                  onClick={async () => {
-                    await supabase.auth.signOut();
-                  }}
-                  className="hover:text-gray-900 dark:hover:text-white"
-                >
-                  logout
-                </button>
-              </li>
+              <>
+                <li className="font-semibold text-blue-700 dark:text-blue-300">
+                  Welcome, {userName || 'User'}!
+                </li>
+                <li>
+                  <button
+                    onClick={async () => {
+                      await supabase.auth.signOut();
+                    }}
+                    className="hover:text-gray-900 dark:hover:text-white"
+                  >
+                    logout
+                  </button>
+                </li>
+              </>
             )}
           </ul>
         </nav>

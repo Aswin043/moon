@@ -7,7 +7,7 @@ import { useAuth } from "./context/AuthContext";
 import { supabase } from "@/lib/supabase";
 
 export default function Home() {
-  const { user } = useAuth();
+  const { user, userName } = useAuth();
   // Location-based notification states
   const [country, setCountry] = useState<string | null>(null);
   const [showNotification, setShowNotification] = useState(false);
@@ -168,16 +168,21 @@ export default function Home() {
                 </Link>
               </li>
             ) : (
-              <li>
-                <button
-                  onClick={async () => {
-                    await supabase.auth.signOut();
-                  }}
-                  className="hover:text-gray-900 dark:hover:text-white"
-                >
-                  logout
-                </button>
-              </li>
+              <>
+                <li className="font-semibold text-blue-700 dark:text-blue-300">
+                  Welcome, {userName || 'User'}!
+                </li>
+                <li>
+                  <button
+                    onClick={async () => {
+                      await supabase.auth.signOut();
+                    }}
+                    className="hover:text-gray-900 dark:hover:text-white"
+                  >
+                    logout
+                  </button>
+                </li>
+              </>
             )}
           </ul>
         </nav>
