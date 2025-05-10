@@ -219,7 +219,7 @@ export default function Home() {
         <div className="fixed top-20 left-4 max-w-sm bg-white dark:bg-gray-800 border-l-4 border-blue-500 p-4 rounded shadow-lg z-40 animate-slide-in">
           <div className="flex flex-col">
             <p className="font-medium text-gray-800 dark:text-white">
-              Welcome back, {user.user_metadata.first_name || 'User'}!
+              Welcome back, {userName || 'User'}!
             </p>
           </div>
         </div>

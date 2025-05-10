@@ -55,6 +55,23 @@ function LoginForm() {
         setLoading(false);
         return;
       }
+
+      // Create or update user record in the user table
+      const { error: userError } = await supabase
+        .from('user')
+        .upsert({
+          id: data.user.id,
+          email: data.user.email,
+          name: data.user.email?.split('@')[0] || 'User', // Default name from email
+          updated_at: new Date().toISOString()
+        }, {
+          onConflict: 'id'
+        });
+
+      if (userError) {
+        console.error('Error creating user record:', userError);
+      }
+
       router.push("/"); // Redirect to home page
       router.refresh(); // Refresh the page to update auth state
     } catch (err: any) {
