@@ -3,8 +3,11 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useAuth } from "./context/AuthContext";
+import { supabase } from "@/lib/supabase";
 
 export default function Home() {
+  const { user } = useAuth();
   // Location-based notification states
   const [country, setCountry] = useState<string | null>(null);
   const [showNotification, setShowNotification] = useState(false);
@@ -158,16 +161,24 @@ export default function Home() {
                 owners
               </a>
             </li>
-            <li>
-              <Link href="/login" className="hover:text-gray-900 dark:hover:text-white">
-                login
-              </Link>
-            </li>
-            <li>
-              <Link href="/signup" className="hover:text-gray-900 dark:hover:text-white">
-                sign up
-              </Link>
-            </li>
+            {!user ? (
+              <li>
+                <Link href="/login" className="hover:text-gray-900 dark:hover:text-white">
+                  login
+                </Link>
+              </li>
+            ) : (
+              <li>
+                <button
+                  onClick={async () => {
+                    await supabase.auth.signOut();
+                  }}
+                  className="hover:text-gray-900 dark:hover:text-white"
+                >
+                  logout
+                </button>
+              </li>
+            )}
           </ul>
         </nav>
       </div>
@@ -194,6 +205,17 @@ export default function Home() {
             {timeOfDay === "night" && (
               <p className="text-sm mt-2 text-blue-600">Submit inquiries anytime - we'll follow up tomorrow.</p>
             )}
+          </div>
+        </div>
+      )}
+      
+      {/* Welcome Message */}
+      {user && (
+        <div className="fixed top-20 left-4 max-w-sm bg-white dark:bg-gray-800 border-l-4 border-blue-500 p-4 rounded shadow-lg z-40 animate-slide-in">
+          <div className="flex flex-col">
+            <p className="font-medium text-gray-800 dark:text-white">
+              Welcome back, {user.user_metadata.first_name || 'User'}!
+            </p>
           </div>
         </div>
       )}
