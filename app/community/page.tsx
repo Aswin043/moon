@@ -4,10 +4,11 @@ import Image from "next/image";
 import Link from "next/link";
 import type { NextPage } from 'next';
 import Head from 'next/head';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { format } from 'date-fns';
 import { supabase } from "@/lib/supabase";
-import { useAuth } from "../context/AuthContext"; 
+import { useAuth } from "../context/AuthContext";
+
 // Define the notice type
 interface Notice {
   id: string;
@@ -148,6 +149,74 @@ function NoticeBoard() {
   );
 }
 
+// Members component
+function Members() {
+  const [members, setMembers] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchMembers() {
+      try {
+        const { data, error } = await supabase
+          .from('profiles')
+          .select('*')
+          .order('created_at', { ascending: false });
+
+        if (error) throw error;
+        setMembers(data || []);
+      } catch (error) {
+        console.error('Error fetching members:', error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchMembers();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="bg-white rounded-lg shadow-lg p-6 max-w-4xl mx-auto w-full">
+        <h2 className="text-2xl font-bold text-gray-800 mb-6">Community Members</h2>
+        <div className="animate-pulse space-y-4">
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="flex items-center space-x-4">
+              <div className="h-12 w-12 bg-gray-200 rounded-full"></div>
+              <div className="flex-1 space-y-2">
+                <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+                <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="bg-white rounded-lg shadow-lg p-6 max-w-4xl mx-auto w-full">
+      <h2 className="text-2xl font-bold text-gray-800 mb-6">Community Members</h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {members.map((member) => (
+          <div key={member.id} className="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg">
+            <div className="h-12 w-12 bg-blue-100 rounded-full flex items-center justify-center">
+              <span className="text-blue-600 font-semibold text-lg">
+                {member.first_name?.[0] || member.email?.[0] || '?'}
+              </span>
+            </div>
+            <div>
+              <h3 className="font-semibold text-gray-800">
+                {member.first_name} {member.last_name}
+              </h3>
+              <p className="text-sm text-gray-600">{member.email}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export default function Community() {
   const { user } = useAuth();
   return (
@@ -208,6 +277,7 @@ export default function Community() {
       
       <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start w-full max-w-4xl">
         <NoticeBoard />
+        <Members />
       </main>
     </div>
   );
