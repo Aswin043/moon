@@ -16,6 +16,7 @@ export default function Signup() {
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -28,33 +29,28 @@ export default function Signup() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-
-    // Validate passwords match
+    setLoading(true);
     if (formData.password !== formData.confirmPassword) {
       setError("Passwords do not match");
+      setLoading(false);
       return;
     }
-
-    setLoading(true);
-
     try {
-      const { data, error } = await supabase.auth.signUp({
-        email: formData.email,
-        password: formData.password,
-        options: {
-          data: {
-            first_name: formData.firstName,
-            last_name: formData.lastName,
+      // Insert into 'user' table
+      const { data, error } = await supabase
+        .from('user')
+        .insert([
+          {
+            name: formData.firstName + ' ' + formData.lastName,
+            email: formData.email,
+            created_at: new Date().toISOString(),
           },
-        },
-      });
-
+        ]);
       if (error) throw error;
-
-      // Successful signup
+      setSuccess(true);
       router.push("/login?message=Check your email to confirm your account");
     } catch (err: any) {
-      setError(err.message || "Failed to create account");
+      setError(err.message || 'Signup failed');
     } finally {
       setLoading(false);
     }
