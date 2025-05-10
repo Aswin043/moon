@@ -158,7 +158,7 @@ function Members() {
   useEffect(() => {
     async function fetchMembers() {
       try {
-        console.log('Fetching members from profiles table...');
+        console.log('Fetching members from profile table...');
         
         const { data, error } = await supabase
           .from('profile')
@@ -173,7 +173,7 @@ function Members() {
         }
 
         if (!data || data.length === 0) {
-          console.log('No members found in profiles table');
+          console.log('No members found in profile table');
           setError('No members found');
         } else {
           console.log('Members found:', data);
@@ -200,7 +200,6 @@ function Members() {
               <div className="h-12 w-12 bg-gray-200 rounded-full"></div>
               <div className="flex-1 space-y-2">
                 <div className="h-4 bg-gray-200 rounded w-3/4"></div>
-                <div className="h-4 bg-gray-200 rounded w-1/2"></div>
               </div>
             </div>
           ))}
@@ -228,14 +227,13 @@ function Members() {
           <div key={member.id} className="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg">
             <div className="h-12 w-12 bg-blue-100 rounded-full flex items-center justify-center">
               <span className="text-blue-600 font-semibold text-lg">
-                {member.first_name?.[0]?.toUpperCase() || member.email?.[0]?.toUpperCase() || '?'}
+                {member.name?.[0]?.toUpperCase() || '?'}
               </span>
             </div>
             <div>
               <h3 className="font-semibold text-gray-800">
-                {member.first_name} {member.last_name}
+                {member.name}
               </h3>
-              <p className="text-sm text-gray-600">{member.email}</p>
             </div>
           </div>
         ))}
