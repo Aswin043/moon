@@ -32,7 +32,7 @@ $owners = [
 ];
 
 // Use database results if available, otherwise use sample data
-$displayOwners = $result && $result->num_rows > 0 ? $result->fetch_all(MYSQLI_ASSOC) : $owners;
+
 ?>
 
 <!DOCTYPE html>
