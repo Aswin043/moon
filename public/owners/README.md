@@ -1,14 +1,19 @@
-# Owner Images
+# Owner Profile Images
 
-Place owner profile images in this directory. The images should be:
+Please add the following images to this directory:
 
-1. Square format (recommended size: 800x800 pixels)
-2. JPG or PNG format
-3. Named according to the pattern: `firstname-lastname.jpg`
+1. `john-smith.jpg` - Profile picture for John Smith
+2. `sarah-johnson.jpg` - Profile picture for Sarah Johnson
+3. `michael-chen.jpg` - Profile picture for Michael Chen
 
-Required images:
-- john-smith.jpg
-- sarah-johnson.jpg
-- michael-chen.jpg
+Image Requirements:
+- Format: JPG or PNG
+- Size: 800x800 pixels (square)
+- Style: Professional headshot
+- Background: Neutral or professional setting
+- File size: Maximum 2MB per image
 
-Note: Make sure all images are properly licensed for use on your website. 
+You can add your images by:
+1. Placing them directly in this directory
+2. Naming them exactly as specified above
+3. Making sure they meet the size and format requirements 
