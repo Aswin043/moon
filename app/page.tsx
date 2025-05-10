@@ -133,7 +133,7 @@ export default function Home() {
             .moon
           </div>
           <ul className="flex gap-6 text-sm font-medium text-gray-600 dark:text-gray-300">
-          <li>
+            <li>
               <a href="/" className="hover:text-gray-900 dark:hover:text-white">
                 Home
               </a>
@@ -152,6 +152,11 @@ export default function Home() {
               <Link href="/rules">
                 <span className="hover:text-gray-900 dark:hover:text-white">rules</span>
               </Link>
+            </li>
+            <li>
+              <a href="/owners.php" className="hover:text-gray-900 dark:hover:text-white">
+                owners
+              </a>
             </li>
           </ul>
         </nav>
