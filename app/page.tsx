@@ -134,27 +134,27 @@ export default function Home() {
           </div>
           <ul className="flex gap-6 text-sm font-medium text-gray-600 dark:text-gray-300">
             <li>
-              <a href="/" className="hover:text-gray-900 dark:hover:text-white">
+              <Link href="/" className="hover:text-gray-900 dark:hover:text-white">
                 Home
-              </a>
-            </li>
-            <li>
-              <Link href="/community">
-                <span className="hover:text-gray-900 dark:hover:text-white">community</span>
               </Link>
             </li>
             <li>
-              <Link href="/services">
-                <span className="hover:text-gray-900 dark:hover:text-white">services</span>
+              <Link href="/community" className="hover:text-gray-900 dark:hover:text-white">
+                community
               </Link>
             </li>
             <li>
-              <Link href="/rules">
-                <span className="hover:text-gray-900 dark:hover:text-white">rules</span>
+              <Link href="/services" className="hover:text-gray-900 dark:hover:text-white">
+                services
               </Link>
             </li>
             <li>
-              <a href="/owners.php" className="hover:text-gray-900 dark:hover:text-white">
+              <Link href="/rules" className="hover:text-gray-900 dark:hover:text-white">
+                rules
+              </Link>
+            </li>
+            <li>
+              <a href="/api/owners.php" className="hover:text-gray-900 dark:hover:text-white">
                 owners
               </a>
             </li>

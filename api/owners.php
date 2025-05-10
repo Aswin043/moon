@@ -64,7 +64,7 @@ $owners = [
                     <a href="/community" class="text-gray-600 hover:text-gray-900">Community</a>
                     <a href="/services" class="text-gray-600 hover:text-gray-900">Services</a>
                     <a href="/rules" class="text-gray-600 hover:text-gray-900">Rules</a>
-                    <a href="/owners.php" class="text-gray-600 hover:text-gray-900 font-medium">Owners</a>
+                    <a href="/api/owners.php" class="text-gray-600 hover:text-gray-900 font-medium">Owners</a>
                 </div>
             </div>
         </div>
