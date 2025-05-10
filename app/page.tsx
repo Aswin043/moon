@@ -158,6 +158,16 @@ export default function Home() {
                 owners
               </a>
             </li>
+            <li>
+              <Link href="/login" className="hover:text-gray-900 dark:hover:text-white">
+                login
+              </Link>
+            </li>
+            <li>
+              <Link href="/signup" className="hover:text-gray-900 dark:hover:text-white">
+                sign up
+              </Link>
+            </li>
           </ul>
         </nav>
       </div>
