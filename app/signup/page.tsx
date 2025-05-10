@@ -36,16 +36,15 @@ export default function Signup() {
       return;
     }
     try {
-      // Insert into 'user' table
-      const { data, error } = await supabase
-        .from('user')
-        .insert([
-          {
+      const { data, error } = await supabase.auth.signUp({
+        email: formData.email,
+        password: formData.password,
+        options: {
+          data: {
             name: formData.firstName + ' ' + formData.lastName,
-            email: formData.email,
-            created_at: new Date().toISOString(),
-          },
-        ]);
+          }
+        }
+      });
       if (error) throw error;
       setSuccess(true);
       router.push("/login?message=Check your email to confirm your account");

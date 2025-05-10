@@ -46,21 +46,15 @@ function LoginForm() {
     setError("");
     setLoading(true);
     try {
-      // Query the 'user' table for a matching email
-      const { data, error } = await supabase
-        .from('user')
-        .select('*')
-        .eq('email', email)
-        .single();
-      if (error || !data) {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+      if (error) {
         setError('Invalid email or password');
         setLoading(false);
         return;
       }
-      // Simulate password check (since password is not stored in user table)
-      // In production, use Supabase Auth or hash passwords!
-      // setSuccess(true); // Removed to fix linter error
-      // Set user context, redirect, etc.
       router.push("/"); // Redirect to home page
       router.refresh(); // Refresh the page to update auth state
     } catch (err: any) {
