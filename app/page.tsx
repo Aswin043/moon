@@ -2,9 +2,9 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import Link from "next/link";
 import { useAuth } from "./context/AuthContext";
-import { supabase } from "@/lib/supabase";
+import { cookieManager } from "@/lib/cookies";
+import Navigation from "./components/Navigation";
 
 export default function Home() {
   const { user, userName } = useAuth();
@@ -18,7 +18,7 @@ export default function Home() {
   const [greeting, setGreeting] = useState("");
   const [timeOfDay, setTimeOfDay] = useState("");
   const [localTime, setLocalTime] = useState("");
-  const [showGreeting, setShowGreeting] = useState(false); // Initialize to false
+  const [showGreeting, setShowGreeting] = useState(false);
 
   useEffect(() => {
     // Time-based greeting logic
@@ -62,8 +62,8 @@ export default function Home() {
     }, 15000);
 
     // Location notification logic
-    // Check if notification was previously dismissed in this session
-    const isDismissed = localStorage.getItem("notificationDismissed") === "true";
+    // Check if notification was previously dismissed using cookie
+    const isDismissed = cookieManager.getNotificationDismissed();
     
     if (isDismissed) {
       setLoading(false);
@@ -110,10 +110,6 @@ export default function Home() {
       }
     }
     
-    // Clear localStorage on component mount (for testing purposes)
-    // Comment this out in production
-    localStorage.removeItem("notificationDismissed");
-    
     // Clean up intervals and timers on unmount
     return () => {
       clearInterval(intervalId);
@@ -123,70 +119,13 @@ export default function Home() {
 
   const closeNotification = () => {
     setShowNotification(false);
-    // Store in local storage to prevent showing again in the same session
-    localStorage.setItem("notificationDismissed", "true");
+    // Store in cookie to prevent showing again
+    cookieManager.setNotificationDismissed(true);
   };
 
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      {/* Navigation Bar */}
-      <div className="nav-container">
-        <nav className="fixed top-0 left-0 w-full bg-white dark:bg-gray-800 shadow-md rounded-b-lg px-6 py-4 flex justify-between items-center z-50">
-          <div className="text-lg font-semibold text-gray-800 dark:text-white">
-            .moon
-          </div>
-          <ul className="flex gap-6 text-sm font-medium text-gray-600 dark:text-gray-300">
-            <li>
-              <Link href="/" className="hover:text-gray-900 dark:hover:text-white">
-                Home
-              </Link>
-            </li>
-            <li>
-              <Link href="/community" className="hover:text-gray-900 dark:hover:text-white">
-                community
-              </Link>
-            </li>
-            <li>
-              <Link href="/services" className="hover:text-gray-900 dark:hover:text-white">
-                services
-              </Link>
-            </li>
-            <li>
-              <Link href="/rules" className="hover:text-gray-900 dark:hover:text-white">
-                rules
-              </Link>
-            </li>
-            <li>
-              <a href="/api/owners.php" className="hover:text-gray-900 dark:hover:text-white">
-                owners
-              </a>
-            </li>
-            {!user ? (
-              <li>
-                <Link href="/login" className="hover:text-gray-900 dark:hover:text-white">
-                  login
-                </Link>
-              </li>
-            ) : (
-              <>
-                <li className="font-semibold text-blue-700 dark:text-blue-300">
-                  Welcome, {userName || 'User'}!
-                </li>
-                <li>
-                  <button
-                    onClick={async () => {
-                      await supabase.auth.signOut();
-                    }}
-                    className="hover:text-gray-900 dark:hover:text-white"
-                  >
-                    logout
-                  </button>
-                </li>
-              </>
-            )}
-          </ul>
-        </nav>
-      </div>
+      <Navigation />
       
       {/* Time-based Greeting - will disappear after 15 seconds */}
       {showGreeting && (
@@ -214,20 +153,9 @@ export default function Home() {
         </div>
       )}
       
-      {/* Welcome Message */}
-      {user && (
-        <div className="fixed top-20 left-4 max-w-sm bg-white dark:bg-gray-800 border-l-4 border-blue-500 p-4 rounded shadow-lg z-40 animate-slide-in">
-          <div className="flex flex-col">
-            <p className="font-medium text-gray-800 dark:text-white">
-              Welcome back, {userName || 'User'}!
-            </p>
-          </div>
-        </div>
-      )}
-      
       {/* Location-based Notification */}
       {showNotification && (
-        <div className="fixed top-20 right-4 max-w-sm bg-blue-50 border-l-4 border-blue-500 text-blue-700 p-4 rounded shadow-lg z-50 animate-slide-in">
+        <div className="fixed top-20 right-4 max-w-sm bg-blue-50 dark:bg-blue-900 border-l-4 border-blue-500 text-blue-700 dark:text-blue-200 p-4 rounded shadow-lg z-50 animate-slide-in">
           <div className="flex justify-between items-start">
             <div className="flex-grow">
               <p className="font-medium">{notificationMessage}</p>
@@ -235,14 +163,14 @@ export default function Home() {
             </div>
             <button 
               onClick={closeNotification}
-              className="text-blue-500 hover:text-blue-700 ml-4"
+              className="text-blue-500 hover:text-blue-700 dark:text-blue-300 dark:hover:text-blue-100 ml-4"
               aria-label="Close notification"
             >
               ✕
             </button>
           </div>
           <div className="mt-2">
-            <button className="text-sm text-blue-600 hover:text-blue-800 underline">
+            <button className="text-sm text-blue-600 hover:text-blue-800 dark:text-blue-300 dark:hover:text-blue-100 underline">
               Learn More
             </button>
           </div>
@@ -265,7 +193,7 @@ export default function Home() {
           <div className="rec-aboutus">
             <h1 className="boutus">.aboutUS</h1>
             <p className="aboutus-text">
-            We are Moon, a Strata Manager based in Sydney we offer expert services to ensure seamless property operations and resident satisfaction. We specialize in maintenance, compliance, and fostering strong communities.
+              We are Moon, a Strata Manager based in Sydney we offer expert services to ensure seamless property operations and resident satisfaction. We specialize in maintenance, compliance, and fostering strong communities.
             </p>
           </div>
         </div>
@@ -296,19 +224,19 @@ export default function Home() {
             <h3 className="text-lg font-semibold text-gray-800 dark:text-white">Quick Links</h3>
             <ul className="space-y-2">
               <li>
-                <Link href="/services" className="text-sm text-gray-600 dark:text-gray-300 hover:text-blue-600">
+                <a href="/services" className="text-sm text-gray-600 dark:text-gray-300 hover:text-blue-600">
                   Our Services
-                </Link>
+                </a>
               </li>
               <li>
-                <Link href="/community" className="text-sm text-gray-600 dark:text-gray-300 hover:text-blue-600">
+                <a href="/community" className="text-sm text-gray-600 dark:text-gray-300 hover:text-blue-600">
                   Community Portal
-                </Link>
+                </a>
               </li>
               <li>
-                <Link href="/rules" className="text-sm text-gray-600 dark:text-gray-300 hover:text-blue-600">
+                <a href="/rules" className="text-sm text-gray-600 dark:text-gray-300 hover:text-blue-600">
                   Strata Rules
-                </Link>
+                </a>
               </li>
               <li>
                 <a href="/contact" className="text-sm text-gray-600 dark:text-gray-300 hover:text-blue-600">
