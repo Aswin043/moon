@@ -2,7 +2,18 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+
+interface ServiceRequest {
+  id: number;
+  name: string;
+  unitNumber: string;
+  issueType: string;
+  description: string;
+  status: string;
+  date: string;
+  timestamp: string;
+}
 
 export default function servicec() {
   // Form state
@@ -14,6 +25,22 @@ export default function servicec() {
     issueType: "maintenance",
     description: ""
   });
+
+  // Initialize service requests from localStorage or empty array
+  const [serviceRequests, setServiceRequests] = useState<ServiceRequest[]>(() => {
+    if (typeof window !== 'undefined') {
+      const savedRequests = localStorage.getItem('serviceRequests');
+      return savedRequests ? JSON.parse(savedRequests) : [];
+    }
+    return [];
+  });
+
+  // Update localStorage whenever serviceRequests changes
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('serviceRequests', JSON.stringify(serviceRequests));
+    }
+  }, [serviceRequests]);
 
   // Handle form input changes
   const handleChange = (e: { target: { name: any; value: any; }; }) => {
@@ -27,9 +54,21 @@ export default function servicec() {
   // Handle form submission
   const handleSubmit = (e: { preventDefault: () => void; }) => {
     e.preventDefault();
-    console.log("Form submitted:", formData);
-    // Here you would typically send the data to your API
-    alert("Service request submitted successfully!");
+    
+    // Create new request with timestamp
+    const newRequest = {
+      id: Date.now(), // Use timestamp as unique ID
+      name: formData.name,
+      unitNumber: formData.unitNumber,
+      issueType: formData.issueType,
+      description: formData.description,
+      status: "New",
+      date: new Date().toISOString().split('T')[0],
+      timestamp: new Date().toISOString()
+    };
+    
+    // Add new request to the beginning of the list
+    setServiceRequests([newRequest, ...serviceRequests]);
     
     // Reset form
     setFormData({
@@ -40,6 +79,8 @@ export default function servicec() {
       issueType: "maintenance",
       description: ""
     });
+    
+    alert("Service request submitted successfully!");
   };
 
   // FAQ items
@@ -99,32 +140,66 @@ export default function servicec() {
         </nav>
       </div>
       
-      <main className="flex flex-col gap-[32px] row-start-2 items-center w-full max-w-6xl pt-12">
+      <main className="flex flex-col gap-[32px] row-start-2 items-center w-full max-w-7xl pt-12">
         <h1 className="text-3xl font-bold text-gray-800 mb-6 text-center">Service Request</h1>
         
-        <div className="flex flex-col md:flex-row w-full gap-8">
-          {/* FAQ Section - Left Side */}
-          <div className="w-full md:w-1/3 bg-gray-50 p-6 rounded-lg shadow-md">
-            <h2 className="text-xl font-bold text-gray-800 mb-4">Frequently Asked Questions</h2>
-            
-            <div className="space-y-4">
-              {faqItems.map((item, index) => (
-                <div key={index} className="border-b border-gray-200 pb-3">
-                  <h3 className="font-semibold text-gray-700 mb-1">{item.question}</h3>
-                  <p className="text-gray-600 text-sm">{item.answer}</p>
-                </div>
-              ))}
+        <div className="flex flex-col lg:flex-row w-full gap-8">
+          {/* Left Column - FAQ and Recent Requests */}
+          <div className="w-full lg:w-1/3 space-y-8">
+            {/* FAQ Section */}
+            <div className="bg-gray-50 p-6 rounded-lg shadow-md">
+              <h2 className="text-xl font-bold text-gray-800 mb-4">Frequently Asked Questions</h2>
+              
+              <div className="space-y-4">
+                {faqItems.map((item, index) => (
+                  <div key={index} className="border-b border-gray-200 pb-3">
+                    <h3 className="font-semibold text-gray-700 mb-1">{item.question}</h3>
+                    <p className="text-gray-600 text-sm">{item.answer}</p>
+                  </div>
+                ))}
+              </div>
+              
+              <div className="mt-6 bg-blue-50 p-4 rounded-lg border border-blue-100">
+                <h3 className="font-semibold text-blue-800 mb-2">Need immediate assistance?</h3>
+                <p className="text-blue-700 text-sm">For emergencies, please call:</p>
+                <p className="text-blue-800 font-bold mt-1">{process.env.NEXT_PUBLIC_COMPANY_PHONE}</p>
+              </div>
             </div>
-            
-            <div className="mt-6 bg-blue-50 p-4 rounded-lg border border-blue-100">
-              <h3 className="font-semibold text-blue-800 mb-2">Need immediate assistance?</h3>
-              <p className="text-blue-700 text-sm">For emergencies, please call:</p>
-              <p className="text-blue-800 font-bold mt-1">(555) 123-4567</p>
+
+            {/* Recent Requests Section */}
+            <div className="bg-white p-6 rounded-lg shadow-md">
+              <h2 className="text-xl font-bold text-gray-800 mb-4">Recent Requests</h2>
+              {serviceRequests.length > 0 ? (
+                <div className="space-y-4">
+                  {serviceRequests.map((request: ServiceRequest) => (
+                    <div key={request.id} className="border-b border-gray-200 pb-3 last:border-0">
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <h3 className="font-semibold text-gray-700">{request.unitNumber}</h3>
+                          <p className="text-sm text-gray-600">{request.name}</p>
+                        </div>
+                        <span className={`text-xs px-2 py-1 rounded-full ${
+                          request.status === 'Completed' ? 'bg-green-100 text-green-800' :
+                          request.status === 'In Progress' ? 'bg-blue-100 text-blue-800' :
+                          request.status === 'Scheduled' ? 'bg-yellow-100 text-yellow-800' :
+                          'bg-gray-100 text-gray-800'
+                        }`}>
+                          {request.status}
+                        </span>
+                      </div>
+                      <p className="text-sm text-gray-600 mt-1">{request.description}</p>
+                      <p className="text-xs text-gray-500 mt-1">{request.date}</p>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-gray-500 text-center py-4">No requests submitted yet</p>
+              )}
             </div>
           </div>
           
-          {/* Request Form - Right Side */}
-          <div className="w-full md:w-2/3 bg-white p-6 rounded-lg shadow-md">
+          {/* Right Column - Request Form */}
+          <div className="w-full lg:w-2/3 bg-white p-6 rounded-lg shadow-md">
             <h2 className="text-xl font-bold text-gray-800 mb-4">Submit a Service Request</h2>
             
             <form onSubmit={handleSubmit} className="space-y-4">
