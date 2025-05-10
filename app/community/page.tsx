@@ -161,7 +161,7 @@ function Members() {
         console.log('Fetching members from profile table...');
         
         const { data, error } = await supabase
-          .from('profile')
+          .from('user')
           .select('*')
           .order('created_at', { ascending: false });
 
