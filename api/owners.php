@@ -1,21 +1,4 @@
 <?php
-// Database connection (replace with your actual database credentials)
-$db_host = 'localhost';
-$db_user = 'your_username';
-$db_pass = 'your_password';
-$db_name = 'strata_db';
-
-// Create connection
-$conn = new mysqli($db_host, $db_user, $db_pass, $db_name);
-
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-
-// Fetch owners from database
-$sql = "SELECT * FROM owners";
-$result = $conn->query($sql);
 
 // Sample data (use this if database is not set up yet)
 $owners = [
