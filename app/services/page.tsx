@@ -45,20 +45,6 @@ export default function servicec() {
     }
   }, [serviceRequests]);
 
-  useEffect(() => {
-    if (user) {
-      (async () => {
-        const name = user.user_metadata?.name || user.user_metadata?.full_name || user.email?.split('@')[0] || 'User';
-        await supabase.from('user').upsert({
-          id: user.id,
-          email: user.email,
-          name,
-          updated_at: new Date().toISOString()
-        }, { onConflict: 'id' });
-      })();
-    }
-  }, [user]);
-
   // Handle form input changes
   const handleChange = (e: { target: { name: any; value: any; }; }) => {
     const { name, value } = e.target;

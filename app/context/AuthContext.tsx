@@ -4,6 +4,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { User } from "@supabase/supabase-js";
 import Cookies from 'js-cookie';
+import { useRouter } from "next/navigation";
 
 type AuthContextType = {
   user: User | null;
@@ -21,6 +22,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [userName, setUserName] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
     // Check for cookie consent
@@ -65,7 +67,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     });
 
     // Listen for changes on auth state (logged in, signed out, etc.)
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
       if (session?.user && hasAcceptedCookies) {
         // Set auth cookie
         Cookies.set('auth_token', session.access_token, { 
@@ -82,12 +84,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         await upsertAndFetchUserName(session.user);
       } else {
         setUserName(null);
+        // Redirect to login on sign out or session loss
+        router.push('/login');
       }
       setLoading(false);
     });
 
     return () => subscription.unsubscribe();
-  }, []);
+  }, [router]);
 
   return (
     <AuthContext.Provider value={{ user, userName, loading }}>
