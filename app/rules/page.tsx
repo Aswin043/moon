@@ -4,10 +4,25 @@ import { supabase } from "@/lib/supabase";
 import Image from "next/image";
 import Link from "next/link";
 import { useAuth } from "../context/AuthContext";
+import { useEffect } from "react";
 
-
-  export default function Rules() {
+export default function Rules() {
   const { user, userName } = useAuth();
+
+  useEffect(() => {
+    if (user) {
+      (async () => {
+        const name = user.user_metadata?.name || user.user_metadata?.full_name || user.email?.split('@')[0] || 'User';
+        await supabase.from('user').upsert({
+          id: user.id,
+          email: user.email,
+          name,
+          updated_at: new Date().toISOString()
+        }, { onConflict: 'id' });
+      })();
+    }
+  }, [user]);
+
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       {/* Navigation Bar */}

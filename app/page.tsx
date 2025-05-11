@@ -121,6 +121,21 @@ export default function Home() {
     };
   }, []);
 
+  // Ensure user is upserted into the user table after login (for Google sign-in and others)
+  useEffect(() => {
+    if (user) {
+      (async () => {
+        const name = user.user_metadata?.name || user.user_metadata?.full_name || user.email?.split('@')[0] || 'User';
+        await supabase.from('user').upsert({
+          id: user.id,
+          email: user.email,
+          name,
+          updated_at: new Date().toISOString()
+        }, { onConflict: 'id' });
+      })();
+    }
+  }, [user]);
+
   const closeNotification = () => {
     setShowNotification(false);
     // Store in local storage to prevent showing again in the same session
@@ -176,6 +191,7 @@ export default function Home() {
                   <button
                     onClick={async () => {
                       await supabase.auth.signOut();
+                      window.location.reload();
                     }}
                     className="hover:text-gray-900 dark:hover:text-white"
                   >
