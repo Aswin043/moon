@@ -306,6 +306,7 @@ export default function Community() {
                   <button
                     onClick={async () => {
                       await supabase.auth.signOut();
+                      window.location.reload();
                     }}
                     className="hover:text-gray-900 dark:hover:text-white"
                   >
