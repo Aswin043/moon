@@ -1,0 +1,12 @@
+.git
+.github
+node_modules
+*.md
+tests
+__tests__
+.env*
+public/images/large-unused-folder
+.vscode
+.idea
+coverage
+*.log 
