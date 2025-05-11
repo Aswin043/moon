@@ -26,6 +26,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // Check for cookie consent
     const hasAcceptedCookies = localStorage.getItem('cookieConsent') === 'true';
     
+    // Helper to upsert user and fetch name
+    const upsertAndFetchUserName = async (sessionUser: User) => {
+      const name = sessionUser.user_metadata?.name || sessionUser.user_metadata?.full_name || sessionUser.email?.split('@')[0] || 'User';
+      // Upsert user into user table
+      await supabase.from('user').upsert({
+        id: sessionUser.id,
+        email: sessionUser.email,
+        name,
+        updated_at: new Date().toISOString()
+      }, { onConflict: 'id' });
+      // Fetch user name from user table
+      const { data, error } = await supabase
+        .from('user')
+        .select('name')
+        .eq('id', sessionUser.id)
+        .single();
+      setUserName(data?.name || null);
+    };
+
     // Check active sessions and sets the user
     supabase.auth.getSession().then(async ({ data: { session } }) => {
       if (session?.user && hasAcceptedCookies) {
@@ -36,16 +55,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           sameSite: 'strict'
         });
       }
-      
       setUser(session?.user ?? null);
       if (session?.user) {
-        // Fetch user name from user table
-        const { data, error } = await supabase
-          .from('user')
-          .select('name')
-          .eq('id', session.user.id)
-          .single();
-        setUserName(data?.name || null);
+        await upsertAndFetchUserName(session.user);
       } else {
         setUserName(null);
       }
@@ -65,16 +77,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         // Remove auth cookie on sign out
         Cookies.remove('auth_token');
       }
-      
       setUser(session?.user ?? null);
       if (session?.user) {
-        // Fetch user name from user table
-        const { data, error } = await supabase
-          .from('user')
-          .select('name')
-          .eq('id', session.user.id)
-          .single();
-        setUserName(data?.name || null);
+        await upsertAndFetchUserName(session.user);
       } else {
         setUserName(null);
       }
