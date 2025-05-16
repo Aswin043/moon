@@ -21,94 +21,48 @@ const nextConfig = {
   // Reduce bundle size
   experimental: {
     optimizeCss: true,
-    optimizePackageImports: ['react', 'react-dom', 'next'],
-    outputFileTracingRoot: process.cwd(),
-    outputFileTracingExcludes: {
-      '*': [
-        // Exclude development files
-        '**/.git/**',
-        '**/.next/**',
-        '**/node_modules/**',
-        '**/.env*',
-        '**/README.md',
-        '**/package-lock.json',
-        '**/yarn.lock',
-        '**/pnpm-lock.yaml',
-        // Exclude test files
-        '**/*.test.*',
-        '**/*.spec.*',
-        '**/__tests__/**',
-        '**/test/**',
-        '**/tests/**',
-        // Exclude documentation
-        '**/docs/**',
-        '**/documentation/**',
-        // Exclude development tools
-        '**/.vscode/**',
-        '**/.idea/**',
-        '**/.github/**',
-        // Exclude large media files
-        '**/public/videos/**',
-        '**/public/audio/**',
-        // Exclude source maps in production
-        '**/*.map',
-      ],
-    },
-    outputFileTracingIncludes: {
-      '*': [
-        // Include only necessary files
-        '**/app/**',
-        '**/components/**',
-        '**/lib/**',
-        '**/styles/**',
-        '**/public/images/**',
-        '**/next.config.js',
-        '**/package.json',
-      ],
-    },
+    optimizePackageImports: [
+      '@supabase/supabase-js',
+      'date-fns',
+      'react',
+      'react-dom',
+      'next',
+    ],
   },
   
   // Configure webpack
   webpack: (config, { dev, isServer }) => {
-    if (!dev && !isServer) {
+    // Production optimizations
+    if (!dev) {
+      // Split chunks optimization
       config.optimization.splitChunks = {
         chunks: 'all',
         minSize: 20000,
         maxSize: 244000,
+        minChunks: 1,
+        maxAsyncRequests: 30,
+        maxInitialRequests: 30,
         cacheGroups: {
-          default: false,
-          vendors: false,
-          framework: {
-            chunks: 'all',
-            name: 'framework',
-            test: /[\\/]node_modules[\\/](react|react-dom|next)[\\/]/,
-            priority: 40,
-            enforce: true,
-          },
-          lib: {
+          defaultVendors: {
             test: /[\\/]node_modules[\\/]/,
-            chunks: 'all',
-            name: 'lib',
-            priority: 30,
-            minChunks: 2,
+            priority: -10,
             reuseExistingChunk: true,
           },
-          commons: {
-            name: 'commons',
+          default: {
             minChunks: 2,
-            priority: 20,
-          },
-          shared: {
-            name: (module, chunks) => {
-              return `shared-${chunks.map(c => c.name).join('-')}`;
-            },
-            priority: 10,
-            minChunks: 2,
+            priority: -20,
             reuseExistingChunk: true,
           },
         },
       };
+
+      // Tree shaking optimization
+      config.optimization.usedExports = true;
+      
+      // Minimize CSS
+      config.optimization.minimize = true;
     }
+    
     return config;
   },
 }
