@@ -30,21 +30,32 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     
     // Helper to upsert user and fetch name
     const upsertAndFetchUserName = async (sessionUser: User) => {
-      const name = sessionUser.user_metadata?.name || sessionUser.user_metadata?.full_name || sessionUser.email?.split('@')[0] || 'User';
-      // Upsert user into user table
-      await supabase.from('user').upsert({
-        id: sessionUser.id,
-        email: sessionUser.email,
-        name,
-        updated_at: new Date().toISOString()
-      }, { onConflict: 'id' });
-      // Fetch user name from user table
-      const { data, error } = await supabase
-        .from('user')
-        .select('name')
-        .eq('id', sessionUser.id)
-        .single();
-      setUserName(data?.name || null);
+      try {
+        const name = sessionUser.user_metadata?.name || sessionUser.user_metadata?.full_name || sessionUser.email?.split('@')[0] || 'User';
+        // Upsert user into user table
+        const { error: upsertError } = await supabase.from('user').upsert({
+          id: sessionUser.id,
+          email: sessionUser.email,
+          name,
+          updated_at: new Date().toISOString()
+        }, { onConflict: 'id' });
+
+        if (upsertError) throw upsertError;
+
+        // Fetch user name from user table
+        const { data, error } = await supabase
+          .from('user')
+          .select('name')
+          .eq('id', sessionUser.id)
+          .single();
+
+        if (error) throw error;
+        setUserName(data?.name || name);
+      } catch (error) {
+        console.error('Error updating user:', error);
+        // Fallback to email username if database operations fail
+        setUserName(sessionUser.email?.split('@')[0] || 'User');
+      }
     };
 
     // Check active sessions and sets the user
@@ -68,24 +79,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     // Listen for changes on auth state (logged in, signed out, etc.)
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
-      if (session?.user && hasAcceptedCookies) {
-        // Set auth cookie
-        Cookies.set('auth_token', session.access_token, { 
-          expires: 7, // 7 days
-          secure: process.env.NODE_ENV === 'production',
-          sameSite: 'strict'
-        });
-      } else {
+      if (event === 'SIGNED_OUT') {
         // Remove auth cookie on sign out
         Cookies.remove('auth_token');
-      }
-      setUser(session?.user ?? null);
-      if (session?.user) {
-        await upsertAndFetchUserName(session.user);
-      } else {
+        setUser(null);
         setUserName(null);
-        // Redirect to login on sign out or session loss
         router.push('/login');
+      } else if (session?.user) {
+        if (hasAcceptedCookies) {
+          // Set auth cookie
+          Cookies.set('auth_token', session.access_token, { 
+            expires: 7, // 7 days
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'strict'
+          });
+        }
+        setUser(session.user);
+        await upsertAndFetchUserName(session.user);
       }
       setLoading(false);
     });
