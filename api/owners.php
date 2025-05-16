@@ -6,7 +6,7 @@ $owners = [
         'position' => 'Building Manager',
         'email' => 'john.smith@moonstrata.com.au',
         'phone' => '+61 2 0000 0001',
-        'image' => '/owners/john-smith.jpg',
+        'image' => '/owners/john-smith.webp',
         'bio' => 'With over 15 years of experience in property management, John ensures smooth operations and resident satisfaction.'
     ],
     [
@@ -14,7 +14,7 @@ $owners = [
         'position' => 'Assistant Manager',
         'email' => 'sarah.johnson@moonstrata.com.au',
         'phone' => '+61 2 0000 0002',
-        'image' => '/owners/sarah-johnson.jpg',
+        'image' => '/owners/sarah-johnson.webp',
         'bio' => 'Sarah specializes in community relations and maintenance coordination, bringing 10 years of strata management expertise.'
     ],
     [
@@ -22,7 +22,7 @@ $owners = [
         'position' => 'Maintenance Supervisor',
         'email' => 'michael.chen@moonstrata.com.au',
         'phone' => '+61 2 0000 0003',
-        'image' => '/owners/michael-chen.jpg',
+        'image' => '/owners/michael-chen.webp',
         'bio' => 'Michael oversees all maintenance operations with a focus on preventive maintenance and quick response times.'
     ]
 ];

@@ -4,7 +4,7 @@ const path = require('path');
 
 const optimizeImage = async (inputPath, outputPath, options = {}) => {
   const {
-    width = 1920,
+    width = 800,
     quality = 80,
     format = 'webp'
   } = options;
@@ -34,8 +34,26 @@ const optimizeImage = async (inputPath, outputPath, options = {}) => {
 const heroImage = path.join(__dirname, '../public/heropic.jpg');
 const optimizedHeroImage = path.join(__dirname, '../public/heropic.webp');
 
-optimizeImage(heroImage, optimizedHeroImage, {
-  width: 1920,
-  quality: 80,
-  format: 'webp'
+if (fs.existsSync(heroImage)) {
+  optimizeImage(heroImage, optimizedHeroImage, {
+    width: 1920,
+    quality: 80,
+    format: 'webp'
+  });
+}
+
+// Optimize owner images
+const ownersDir = path.join(__dirname, '../public/owners');
+const ownerImages = ['john-smith.jpg', 'sarah-johnson.jpg', 'michael-chen.jpg'];
+
+ownerImages.forEach(img => {
+  const input = path.join(ownersDir, img);
+  const output = path.join(ownersDir, img.replace('.jpg', '.webp'));
+  if (fs.existsSync(input)) {
+    optimizeImage(input, output, {
+      width: 800,
+      quality: 80,
+      format: 'webp'
+    });
+  }
 }); 

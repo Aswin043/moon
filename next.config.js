@@ -7,8 +7,9 @@ const nextConfig = {
   images: {
     domains: ['localhost'],
     unoptimized: false,
-    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
-    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256],
+    formats: ['image/webp'],
   },
   
   // Enable compression
@@ -20,7 +21,13 @@ const nextConfig = {
   // Reduce bundle size
   experimental: {
     optimizeCss: true,
-    optimizePackageImports: ['@supabase/supabase-js', 'date-fns'],
+    optimizePackageImports: [
+      '@supabase/supabase-js',
+      'date-fns',
+      'react',
+      'react-dom',
+      'next',
+    ],
   },
   
   // Configure webpack
@@ -48,6 +55,12 @@ const nextConfig = {
           },
         },
       };
+
+      // Tree shaking optimization
+      config.optimization.usedExports = true;
+      
+      // Minimize CSS
+      config.optimization.minimize = true;
     }
     
     return config;
