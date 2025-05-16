@@ -1,10 +1,12 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { useAuth } from "./context/AuthContext";
 import { supabase } from "@/lib/supabase";
+import dynamic from 'next/dynamic';
+
+const DynamicImage = dynamic(() => import('next/image'), { ssr: false });
 
 export default function Home() {
   const { user, userName } = useAuth();
@@ -240,14 +242,14 @@ export default function Home() {
       )}
       
       <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start min-h-[calc(100vh-200px)]">
-        <div className="relative w-full">
-          <Image
-            src="/heropic.jpg"
-            alt="heropic"
-            width={1368}
-            height={793}
+        <div className="relative w-full h-[400px] md:h-[500px]">
+          <DynamicImage
+            src="/heropic.webp"
+            alt="Hero Image"
+            width={1920}
+            height={1080}
             priority
-            className="hero-image"
+            className="object-cover w-full h-full"
           />
           <div className="absolute inset-0 flex items-center justify-center">
             <h1 className="hero-text">STRATA MANAGEMENT</h1>
